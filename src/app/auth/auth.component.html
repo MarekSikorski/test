@@ -1,0 +1,27 @@
+
+
+@if(isLoading) {
+<mat-spinner></mat-spinner>
+}
+@else {
+    {{errorMessage + ' bla'}}
+<form class="example-form" [formGroup]="form" (ngSubmit)="onSubmit()">
+    <mat-form-field class="example-full-width">
+        <mat-label>E-Mail</mat-label>
+        <input type="email" matInput formControlName="emailFormControl">
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+        <mat-label>Password</mat-label>
+        <input type="password" matInput formControlName="passwordFormControl">
+    </mat-form-field>
+    <section>
+        <div class="example-button-row">
+            <button mat-raised-button color="primary" type="submit" [disabled]="!form.valid">{{ isLoginMode ? 'Login' :
+                'Sign Up' }}</button>
+            <button mat-raised-button color="primary" type="button" (click)="onSwitchMode()">Switch to {{ !isLoginMode ?
+                'Login' : 'Sign Up' }}</button>
+        </div>
+    </section>
+</form>
+}
