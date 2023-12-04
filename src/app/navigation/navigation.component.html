@@ -5,9 +5,14 @@
       [opened]="(isHandset$ | async) === false">
     <mat-toolbar>Menu</mat-toolbar>
     <mat-nav-list>
-      <a mat-list-item routerLink="/table" routerLinkActive="active" ariaCurrentWhenActive="page">Table</a>
       <a mat-list-item routerLink="/content" routerLinkActive="active" ariaCurrentWhenActive="page">Content</a>
-      <a mat-list-item routerLink="/auth" routerLinkActive="active" ariaCurrentWhenActive="page">Authenticate</a>
+      @if (isAuthenticated) {
+        <a mat-list-item routerLink="/table" routerLinkActive="active" ariaCurrentWhenActive="page">Table</a>
+        <button mat-raised-button color="primary" type="button" (click)="logout()">Logout</button>
+      }
+      @if (!isAuthenticated) {
+        <a mat-list-item routerLink="/auth" routerLinkActive="active" ariaCurrentWhenActive="page">Authenticate</a>
+      }
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>

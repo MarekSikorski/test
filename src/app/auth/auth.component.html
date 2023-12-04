@@ -1,10 +1,10 @@
-
-
+@if (errorMessage.length > 0) {
+    {{errorMessage}}
+}
 @if(isLoading) {
 <mat-spinner></mat-spinner>
 }
 @else {
-    {{errorMessage + ' bla'}}
 <form class="example-form" [formGroup]="form" (ngSubmit)="onSubmit()">
     <mat-form-field class="example-full-width">
         <mat-label>E-Mail</mat-label>
