@@ -59,6 +59,6 @@ export class NavigationComponent implements OnInit, OnDestroy {
     );
 
   logout() {
-    throw new Error('Method not implemented.');
+    this.authService.logout();
   }
 }

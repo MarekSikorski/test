@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject, Observable, catchError, tap, throwError } from 'rxjs';
 import { User } from './user.model';
+import { Route, Router } from '@angular/router';
 
 export interface AuthResponseData {
   kind: string,
@@ -10,7 +11,7 @@ export interface AuthResponseData {
   refreshToken: string,
   expiresIn: string,
   localId: string,
-  registered?: boolean
+  registered?: boolean;
 }
 
 @Injectable({
@@ -18,9 +19,9 @@ export interface AuthResponseData {
 })
 export class AuthService {
 
-  user = new BehaviorSubject<User|null>(null);
+  user = new BehaviorSubject<User | null>(null);
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private router: Router) {
   }
 
   signup(email: string, password: string): Observable<AuthResponseData> {
@@ -31,7 +32,7 @@ export class AuthService {
     }).pipe(
       catchError(this.handleError),
       tap(data => {
-        this.handleAuthentication(data.email, data.localId, data.idToken, +data.expiresIn)
+        this.handleAuthentication(data.email, data.localId, data.idToken, +data.expiresIn);
       })
     );
   }
@@ -44,9 +45,14 @@ export class AuthService {
     }).pipe(
       catchError(this.handleError),
       tap(data => {
-        this.handleAuthentication(data.email, data.localId, data.idToken, +data.expiresIn)
+        this.handleAuthentication(data.email, data.localId, data.idToken, +data.expiresIn);
       })
     );
+  }
+
+  logout() {
+    this.user.next(null);
+    this.router.navigate(['auth']);
   }
 
   private handleAuthentication(
@@ -55,7 +61,7 @@ export class AuthService {
     token: string,
     expiresIn: number
   ) {
-    const expirationDate = new Date(new Date().getTime() + expiresIn * 1000)
+    const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
     const user = new User(
       email,
       userId,
@@ -66,16 +72,16 @@ export class AuthService {
   }
 
   private handleError(errorRes: HttpErrorResponse) {
-    let errorMes = 'An unknown error occurred!'
+    let errorMes = 'An unknown error occurred!';
     if (!errorRes.error || !errorRes.error.error) {
       return throwError(() => new Error(errorMes));
     }
     switch (errorRes.error.error.message) {
       case 'EMAIL_EXISTS':
-        errorMes = 'This email exists already.'
+        errorMes = 'This email exists already.';
         break;
       case 'INVALID_LOGIN_CREDENTIALS':
-        errorMes = 'Invalid login credentials.'
+        errorMes = 'Invalid login credentials.';
         break;
     }
     return throwError(() => new Error(errorMes));
